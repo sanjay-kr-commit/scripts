@@ -17,11 +17,8 @@ for {set x 3} {$x<$GITCOMMANDSIZE} {incr x} {
 spawn bash -c "$GITCOMMAND"
 
 expect "Username for 'https://github.com': "
-interact
 send "$USERNAME\n"
-
 expect "Password for 'https://$USERNAME@github.com':"
-interact
 send "$KEY\n"
 
 interact
