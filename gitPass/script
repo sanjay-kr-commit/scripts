@@ -39,9 +39,7 @@ gitPass() {
     return -1
   fi
 
-  echo $gitCommand[@]
   gitCommandSize=$#
-  echo $gitCommandSize
 
   eval "expect $GITPUSHSCRIPTPATH/expect ${credentials[1]} ${credentials[2]} ${gitCommandSize} $gitCommand"
 
