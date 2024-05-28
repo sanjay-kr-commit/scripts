@@ -29,7 +29,7 @@ gitPass() {
   credentials=($(eval "echo \$$accountVariable"))
 
   if [[ "${#credentials[@]}" != "2" ]] ; then
-    eval "git $@"
+    echo "Either \"$accountVariable\" doesn't exist or malformed"
     return
   fi
 
