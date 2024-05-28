@@ -1,0 +1,21 @@
+#!/bin/bash
+
+sudoPath="/usr/bin/sudo"
+
+sudo() {
+  newArg=""
+
+  for i in $@ ;
+  do 
+    output=$(which $i)
+    if [[ "$i not found" == "$output" ]]
+    then
+      newArg="$newArg $i"
+    else 
+      newArg="$newArg $output"
+    fi
+  done
+
+  eval "$sudoPath $newArg"
+
+}
