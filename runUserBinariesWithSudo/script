@@ -1,21 +1,51 @@
 #!/bin/bash
 
-sudoPath="/usr/bin/sudo"
-
 sudo() {
-  newArg=""
 
-  for i in $@ ;
-  do 
-    output=$(which $i)
-    if [[ "$i not found" == "$output" ]]
-    then
-      newArg="$newArg $i"
+  sudoPath="/usr/bin/sudo"
+  newArgs=""
+  isLocal=false
+  shouldConfirm=false
+
+  for arg in $@ ;
+  do  
+
+    if [[ "$arg" == "-Q" ]] ; then
+      shouldConfirm=true
+    elif [[ "$arg" == "-H" ]] ; then
+      echo "Argment provided by sudo script"
+      echo "You can use \"-L\" followed by local program name for using local installed program with sudo"
+      echo "You can use \"-Q\" for verifying parsed query before executing"
+      echo ""
+      eval "$sudoPath -H"
+      return 0
+    elif [[ "$arg" == "-L" ]] ; then 
+      isLocal=true
+    elif [[ "$isLocal" == "true" ]] ; then
+      absolutePath=$(which $arg)
+      if [[ "$arg not found" == "$absolutePath" ]] ; then 
+        echo "Local program \"$arg\" not found"
+        return -1 
+      fi
+      newArgs="$newArgs $absolutePath"
+      isLocal=false
     else 
-      newArg="$newArg $output"
+      newArgs="$newArgs $arg"
     fi
+
   done
 
-  eval "$sudoPath $newArg"
+  if [[ "$shouldConfirm" == "true" ]]; then
+
+    echo "sudo $newArgs"
+    echo -n "Enter \"y\" to confirm : "
+    read confirm 
+    if [[ "$confirm" != "y" ]] ; then 
+      return
+    fi
+
+  fi
+  
+  eval "$sudoPath $newArgs" 
 
 }
