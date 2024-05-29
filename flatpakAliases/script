@@ -41,17 +41,10 @@ aliasFlatpak() {
   do 
     
     appName=$( flatpak info $packageName | grep -o ".* -" )
-    appName=(${appName:0:(${#appName}-2)})
-    appNameWithoutSpaces=""
-    
-    for i in ${appName[@]} ;
-    do 
-      if [[ "$i" != " " ]] ; then 
-        appNameWithoutSpaces="$appNameWithoutSpaces$i"
-      fi
-    done 
+    appName=${appName:0:(${#appName}-2)}
+    appName=${appName//[[:blank:]]/}
 
-    echo "alias $appNameWithoutSpaces='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
 
   done 
 
@@ -60,17 +53,10 @@ aliasFlatpak() {
   do 
     
     appName=$( flatpak info $packageName | grep -o ".* -" )
-    appName=(${appName:0:(${#appName}-2)})
-    appNameWithoutSpaces=""
-    
-    for i in ${appName[@]} ;
-    do
-      if [[ "$i" != " " ]] ; then 
-        appNameWithoutSpaces="$appNameWithoutSpaces$i"
-      fi
-    done 
+    appName=${appName:0:(${#appName}-2)}
+    appName=${appName//[[:blank:]]/}
 
-    echo "alias $appNameWithoutSpaces='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
 
   done 
 
