@@ -7,3 +7,6 @@ eval "source $SCRIPTPATH/runUserBinariesWithSudo/script"
 
 # comment below line to disable push command
 eval "source $SCRIPTPATH/gitPass/script"
+
+# comment below line to disable flatpakAliases
+eval "source $SCRIPTPATH/flatpakAliases/script"

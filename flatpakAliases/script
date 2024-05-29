@@ -1,0 +1,85 @@
+#!/bin/bash
+
+ALIASFLATPAKSCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+
+aliasFlatpak() {
+
+  systemFlatpakApp=()
+  localFlatpakApp=()
+
+  if [[ -d "/var/lib/flatpak/app" ]] ; then 
+    systemFlatpakApp=($( ls /var/lib/flatpak/app ))
+  fi 
+
+  if [[ -d "$HOME/.local/share/flatpak/app" ]] ; then 
+    localFlatpakApp=($( ls $HOME/.local/share/flatpak/app ))
+  fi 
+
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] ; then
+    previousCount=($( cat "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ))
+    if [[ "${previousCount[1]}" == "${#systemFlatpakApp[@]}" ]] && [[ "${previousCount[2]}" == "${#localFlatpakApp[@]}" ]] ; then 
+      eval "source $ALIASFLATPAKSCRIPTPATH/flatpakList"
+      return
+    fi
+  fi 
+
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] ; then
+    rm "$ALIASFLATPAKSCRIPTPATH/flatpakCount"
+  fi 
+
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] ; then 
+    rm "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+  fi
+
+  touch "$ALIASFLATPAKSCRIPTPATH/flatpakCount" "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+
+  echo "${#systemFlatpakApp[@]} ${#localFlatpakApp[@]} last updated on $(date)" > "$ALIASFLATPAKSCRIPTPATH/flatpakCount"
+  echo "#!/bin/bash" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList" 
+
+  # alias systemFlatpaks 
+  for packageName in ${systemFlatpakApp[@]} ;
+  do 
+    
+    appName=$( flatpak info $packageName | grep -o ".* -" )
+    appName=(${appName:0:(${#appName}-2)})
+    appNameWithoutSpaces=""
+    
+    for i in ${appName[@]} ;
+    do 
+      if [[ "$i" != " " ]] ; then 
+        appNameWithoutSpaces="$appNameWithoutSpaces$i"
+      fi
+    done 
+
+    echo "alias $appNameWithoutSpaces='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+
+  done 
+
+  # alias localFlatpaks 
+  for packageName in ${locakFlatpakApp[@]} ;
+  do 
+    
+    appName=$( flatpak info $packageName | grep -o ".* -" )
+    appName=(${appName:0:(${#appName}-2)})
+    appNameWithoutSpaces=""
+    
+    for i in ${appName[@]} ;
+    do
+      if [[ "$i" != " " ]] ; then 
+        appNameWithoutSpaces="$appNameWithoutSpaces$i"
+      fi
+    done 
+
+    echo "alias $appNameWithoutSpaces='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+
+  done 
+
+  chmod +x "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+  eval "source $ALIASFLATPAKSCRIPTPATH/flatpakList"
+
+}
+
+aliasFlatpak
+
+unset aliasFlatpak
+unset ALIASFLATPAKSCRIPTPATH
