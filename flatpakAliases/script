@@ -15,7 +15,7 @@ aliasFlatpak() {
     localFlatpakApp=($( ls $HOME/.local/share/flatpak/app ))
   fi 
 
-  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] ; then
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" ]] ; then
     previousCount=($( cat "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ))
     if [[ "${previousCount[1]}" == "${#systemFlatpakApp[@]}" ]] && [[ "${previousCount[2]}" == "${#localFlatpakApp[@]}" ]] ; then 
       eval "source $ALIASFLATPAKSCRIPTPATH/flatpakList"
@@ -31,7 +31,11 @@ aliasFlatpak() {
     rm "$ALIASFLATPAKSCRIPTPATH/flatpakList"
   fi
 
-  touch "$ALIASFLATPAKSCRIPTPATH/flatpakCount" "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" ]] ; then 
+    rm "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+  fi
+
+  touch "$ALIASFLATPAKSCRIPTPATH/flatpakCount" "$ALIASFLATPAKSCRIPTPATH/flatpakList" "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   echo "${#systemFlatpakApp[@]} ${#localFlatpakApp[@]} last updated on $(date)" > "$ALIASFLATPAKSCRIPTPATH/flatpakCount"
   echo "#!/bin/bash" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList" 
@@ -45,6 +49,7 @@ aliasFlatpak() {
     appName=${appName//[[:blank:]]/}
 
     echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+    echo "$appName -> $packageName" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   done 
 
@@ -57,6 +62,7 @@ aliasFlatpak() {
     appName=${appName//[[:blank:]]/}
 
     echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
+    echo "$appName -> $packageName" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   done 
 
@@ -68,4 +74,7 @@ aliasFlatpak() {
 aliasFlatpak
 
 unset aliasFlatpak
-unset ALIASFLATPAKSCRIPTPATH
+
+listFlatpakAliases() {
+  cat "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+}
