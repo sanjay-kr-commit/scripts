@@ -12,7 +12,7 @@ sudo() {
 
     if [[ "$arg" == "-Q" ]] ; then
       shouldConfirm=true
-    elif [[ "$arg" == "-H" ]] ; then
+    elif [[ "$arg" == "-H" ]] || [[ "$arg" == "-h" ]]  ; then
       echo "Argment provided by sudo script"
       echo "You can use \"-L\" followed by local program name for using local installed program with sudo"
       echo "You can use \"-Q\" for verifying parsed query before executing"
