@@ -27,7 +27,19 @@ sudo() {
         echo "Local program \"$arg\" not found"
         return -1 
       fi
-      newArgs="$newArgs $absolutePath"
+
+      isFunction=$( echo $absolutePath | grep "$arg *( *)" )
+      isFunction=${isFunction//[[:blank:]]/}
+      if [[ "$isFunction" != "" ]] ; then 
+        isFunction=${isFunction:0:(${#isFunction}-1)}
+        isFunction=${isFunction//[[:blank:]]/}
+      fi
+
+      if [[ "$isFunction" == "" ]] ; then 
+        newArgs="$newArgs $absolutePath"
+      else 
+        newArgs="export $absolutePath && $newArgs $arg"
+      fi 
       isLocal=false
     else 
       newArgs="$newArgs $arg"
@@ -45,7 +57,10 @@ sudo() {
     fi
 
   fi
-  
+
+
+  return
+
   eval "$sudoPath $newArgs" 
 
 }
