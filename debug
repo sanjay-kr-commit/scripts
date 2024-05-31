@@ -42,14 +42,5 @@ debug() {
 }
 
 destructDebugger() {
-  unset DebuggerEnabled
-  unset RED 
-  unset GREEN
-  unset YELLOW
-  unset NC 
-  unset -f constructDebugger
-  unset -f error
-  unset -f warning
-  unset -f debug
-  unset -f destructDebugger
+  DebuggerEnabled=false
 }
