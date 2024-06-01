@@ -15,10 +15,10 @@ aliasFlatpak() {
     localFlatpakApp=($( ls $HOME/.local/share/flatpak/app ))
   fi 
 
-  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" ]] ; then
+  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ]] && [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" ]] ; then
     previousCount=($( cat "$ALIASFLATPAKSCRIPTPATH/flatpakCount" ))
     if [[ "${previousCount[1]}" == "${#systemFlatpakApp[@]}" ]] && [[ "${previousCount[2]}" == "${#localFlatpakApp[@]}" ]] ; then 
-      eval "source $ALIASFLATPAKSCRIPTPATH/flatpakList"
+      eval "source $ALIASFLATPAKSCRIPTPATH/flatpakAliases"
       return
     fi
   fi 
@@ -27,18 +27,14 @@ aliasFlatpak() {
     rm "$ALIASFLATPAKSCRIPTPATH/flatpakCount"
   fi 
 
-  if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakList" ]] ; then 
-    rm "$ALIASFLATPAKSCRIPTPATH/flatpakList"
-  fi
-
   if [[ -f "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" ]] ; then 
     rm "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
   fi
 
-  touch "$ALIASFLATPAKSCRIPTPATH/flatpakCount" "$ALIASFLATPAKSCRIPTPATH/flatpakList" "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+  touch "$ALIASFLATPAKSCRIPTPATH/flatpakCount" "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   echo "${#systemFlatpakApp[@]} ${#localFlatpakApp[@]} last updated on $(date)" > "$ALIASFLATPAKSCRIPTPATH/flatpakCount"
-  echo "#!/bin/bash" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList" 
+  echo "#!/bin/bash" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases" 
 
   # alias systemFlatpaks 
   for packageName in ${systemFlatpakApp[@]} ;
@@ -48,8 +44,7 @@ aliasFlatpak() {
     appName=${appName:0:(${#appName}-2)}
     appName=${appName//[[:blank:]]/}
 
-    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
-    echo "$appName -> $packageName" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   done 
 
@@ -61,20 +56,20 @@ aliasFlatpak() {
     appName=${appName:0:(${#appName}-2)}
     appName=${appName//[[:blank:]]/}
 
-    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakList"
-    echo "$appName -> $packageName" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+    echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
   done 
 
-  chmod +x "$ALIASFLATPAKSCRIPTPATH/flatpakList"
-  eval "source $ALIASFLATPAKSCRIPTPATH/flatpakList"
+  chmod +x "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+  eval "source $ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
 }
 
 aliasFlatpak
 
+unset ALIASFLATPAKSCRIPTPATH
 unset aliasFlatpak
 
-listFlatpakAliases() {
-  cat "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
+flatpakAliases() {
+  alias | grep "flatpak run " | less
 }
