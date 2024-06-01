@@ -6,6 +6,7 @@ sudo() {
   newArgs=""
   isLocal=false
   shouldConfirm=false
+  haveExport=false
 
   for arg in $@ ;
   do  
@@ -38,6 +39,7 @@ sudo() {
       if [[ "$isFunction" == "" ]] ; then 
         newArgs="$newArgs $absolutePath"
       else 
+        haveExport=true
         newArgs="export $absolutePath && $newArgs $arg"
       fi 
       isLocal=false
@@ -46,6 +48,10 @@ sudo() {
     fi
 
   done
+
+  if [[ "$haveExport" == "true" ]] ; then 
+    newArgs=" echo -n \"\" && $newArgs"
+  fi 
 
   if [[ "$shouldConfirm" == "true" ]]; then
 
