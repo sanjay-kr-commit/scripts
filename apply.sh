@@ -17,6 +17,9 @@ eval "source $SCRIPTPATH/gitPass/script"
 # comment below line to disable flatpakAliases
 eval "source $SCRIPTPATH/flatpakAliases/script"
 
+# comment below line to remove syncTheme 
+eval "source $SCRIPTPATH/syncThemeToRoot/script"
+
 if [[ "$2" != "persist" ]] ; then
   destructDebugger 
 fi
