@@ -68,7 +68,7 @@ aliasFlatpak() {
 aliasFlatpak
 
 unset ALIASFLATPAKSCRIPTPATH
-unset aliasFlatpak
+unset -f aliasFlatpak
 
 flatpakAliases() {
   alias | grep "flatpak run " | less
