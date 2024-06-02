@@ -18,7 +18,7 @@ sudo() {
       echo "You can use \"-L\" followed by local program name for using local installed program with sudo"
       echo "You can use \"-Q\" for verifying parsed query before executing"
       echo ""
-      eval "$sudoPath -H"
+      eval "$sudoPath $arg"
       return 0
     elif [[ "$arg" == "-L" ]] ; then 
       isLocal=true
