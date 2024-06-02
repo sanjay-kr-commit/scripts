@@ -20,6 +20,9 @@ eval "source $SCRIPTPATH/flatpakAliases/script"
 # comment below line to remove syncTheme 
 eval "source $SCRIPTPATH/syncThemeToRoot/script"
 
+# comment below line to remove saveAlias and deleteAlias function 
+eval "source $SCRIPTPATH/saveAlias/script"
+
 if [[ "$2" != "persist" ]] ; then
   destructDebugger 
 fi
