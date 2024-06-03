@@ -1,6 +1,6 @@
 #!/bin/bash 
 
-SYNCTHEMESCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+local SYNCTHEMESCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 themeSyncRoot() {
   bash $SYNCTHEMESCRIPTPATH/script askRoot
