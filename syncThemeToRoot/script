@@ -50,6 +50,12 @@ if [[ "$UID" == "0" ]] ; then
     rm "/root/.config/gtkrc-2.0"
     cp "$USERHOME/.config/gtkrc-2.0" "/root/.config/"
     echo "copied $USERHOME/.config/gtkrc-2.0 -> /root/.config/gtkrc-2.0"
+  fi 
+
+  if [[ -f "$USERHOME/.config/gtkrc-2.0" ]] ; then
+    rm "/root/.config/kdeglobals"
+    cp "$USERHOME/.config/kdeglobals" "/root/.config/"
+    echo "copied $USERHOME/.config/kdeglobals -> /root/.config/kdeglobals"
   fi
 
 fi
