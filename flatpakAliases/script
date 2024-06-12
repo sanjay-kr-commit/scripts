@@ -42,6 +42,12 @@ aliasFlatpak() {
     
     appName=$( flatpak info $packageName | grep -o ".* -" )
     appName=${appName:0:(${#appName}-2)}
+    appName=(`echo ${appName}`)
+    if [[ ${appName[1]} =~ [A-Z] ]]; then
+      lower=$(echo ${appName[1]} | tr '[:upper:]' '[:lower:]')
+      appName="$lower${appName[@]:1:(${#appName[@]})}"
+    fi
+    appName=${appName[@]}
     appName=${appName//[[:blank:]]/}
 
     echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
@@ -51,16 +57,21 @@ aliasFlatpak() {
   # alias localFlatpaks 
   for packageName in ${locakFlatpakApp[@]} ;
   do 
-    
+
     appName=$( flatpak info $packageName | grep -o ".* -" )
     appName=${appName:0:(${#appName}-2)}
+    appName=(`echo ${appName}`)
+    if [[ ${appName[1]} =~ [A-Z] ]]; then
+      lower=$(echo ${appName[1]} | tr '[:upper:]' '[:lower:]')
+      appName="$lower${appName[@]:1:(${#appName[@]})}"
+    fi
+    appName=${appName[@]}
     appName=${appName//[[:blank:]]/}
 
     echo "alias $appName='flatpak run $packageName'" >> "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
-
+  
   done 
 
-  chmod +x "$ALIASFLATPAKSCRIPTPATH/flatpakAliases"
   eval "source $ALIASFLATPAKSCRIPTPATH/flatpakAliases"
 
 }
