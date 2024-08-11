@@ -55,6 +55,15 @@ if [[ "$UID" == "0" ]] ; then
   if [[ -f "$USERHOME/.config/kdeglobals" ]] ; then
     rm "/root/.config/kdeglobals"
     cp "$USERHOME/.config/kdeglobals" "/root/.config/"
+    icon=$(kreadconfig6 --file /root/.config/kdeglobals --group Icons --key Theme)
+    if [[ ! -d "/root/.local/share/icons/$icon" ]] ; then
+      if [[ ! -d "/root/.local/share/icons" ]] ; then
+        mkdir -p "/root/.local/share/icons"
+      fi
+      echo "copying icon pack : $icon"
+      cp -r "$USERHOME/.local/share/icons/$icon" "/root/.local/share/icons"
+      echo "copied icon pack : $icon"
+    fi
     echo "copied $USERHOME/.config/kdeglobals -> /root/.config/kdeglobals"
   fi
 
